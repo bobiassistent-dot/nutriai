@@ -1,0 +1,9 @@
+{
+  "rewrites": [
+    { "source": "/(.*)", "destination": "/index.html" }
+  ],
+  "env": {
+    "VITE_API_URL": "https://your-supabase-url.supabase.co",
+    "VITE_SUPABASE_ANON_KEY": "your-anon-key"
+  }
+}

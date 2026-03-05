@@ -6,19 +6,9 @@
   <title>NutriAI - Dein smarter Ernährungs-Coach</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
-    :root {
-      --forest-50: #f0fdf4;
-      --forest-100: #dcfce7;
-      --forest-400: #4ade80;
-      --forest-500: #22c55e;
-      --forest-600: #16a34a;
-      --forest-700: #15803d;
-      --cream: #faf7f2;
-      --earth: #8b7355;
-      --earth-light: #a08b70;
-      --bark: #2d1f14;
-    }
+    :root { --forest-50: #f0fdf4; --forest-100: #dcfce7; --forest-500: #22c55e; --forest-600: #16a34a; --forest-700: #15803d; --cream: #faf7f2; --earth: #8b7355; --earth-light: #a08b70; --bark: #2d1f14; }
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body { font-family: 'Inter', sans-serif; background: linear-gradient(135deg, var(--cream) 0%, var(--forest-50) 50%, var(--cream) 100%); min-height: 100vh; color: var(--bark); padding-bottom: 80px; }
     h1, h2, h3 { font-family: 'Space Grotesk', sans-serif; }
@@ -126,7 +116,7 @@
       <div class="card welcome-card"><p>Guten Tag! 👋</p><h2>Bleib auf Kurs!</h2><p>Du hast heute <span id="progress-percent">0</span>% deines Kalorienziels erreicht.</p></div>
       <div class="progress-grid">
         <div class="progress-item"><div class="progress-header"><span class="progress-label">🔥 Kalorien</span><span id="cal-percent">0%</span></div><div class="progress-bar"><div class="progress-fill" id="cal-fill" style="width:0%"></div></div><div class="progress-value"><span class="current" id="cal-current">0</span><span class="goal">/ 2000 kcal</span></div></div>
-        <div class="progress-item" style="background:#dbeafe"><div class="progress-header"><span class="progress-label">💧 Protein</span><span id="prot-percent">0%</span></div><div class="progress-bar"><div class="progress-fill" id="prot-fill" style="width:0%;background:#2563eb"></div></div><div class="progress-value"><span class="current" id="prot-current" style="color:#2563eb">0</span><span class="goal">/ 120g</span></div></div>
+        <div class="progress-item" style="background:#dbeafe"><div class="progress-header"><span class="progress-label">💪 Protein</span><span id="prot-percent">0%</span></div><div class="progress-bar"><div class="progress-fill" id="prot-fill" style="width:0%;background:#2563eb"></div></div><div class="progress-value"><span class="current" id="prot-current" style="color:#2563eb">0</span><span class="goal">/ 120g</span></div></div>
         <div class="progress-item" style="background:#fef3c7"><div class="progress-header"><span class="progress-label">🌾 Kohlenhydr.</span><span id="carb-percent">0%</span></div><div class="progress-bar"><div class="progress-fill" id="carb-fill" style="width:0%;background:#f59e0b"></div></div><div class="progress-value"><span class="current" id="carb-current" style="color:#d97706">0</span><span class="goal">/ 250g</span></div></div>
         <div class="progress-item" style="background:#ffe4e6"><div class="progress-header"><span class="progress-label">💧 Fett</span><span id="fat-percent">0%</span></div><div class="progress-bar"><div class="progress-fill" id="fat-fill" style="width:0%;background:#e11d48"></div></div><div class="progress-value"><span class="current" id="fat-current" style="color:#e11d48">0</span><span class="goal">/ 65g</span></div></div>
       </div>
@@ -135,7 +125,7 @@
     </div>
     <div id="add" class="view add-view">
       <button class="back-btn" onclick="showView('dashboard')"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>Zurück</button>
-      <h2 style="margin-bottom:16px;font-size:22px">Mahlzeit loggen</h2><p style="color:var(--earth);margin-bottom:12px;font-size:14px">Was möchtest du loggen?</p>
+      <h2 style="margin-bottom:16px;font-size:22px">Mahlzeit loggen</h2>
       <div class="meal-type-grid">
         <button class="meal-type-btn" onclick="selectMealType('breakfast')"><span class="icon">🌅</span><span class="label">Frühstück</span></button>
         <button class="meal-type-btn" onclick="selectMealType('lunch')"><span class="icon">☀️</span><span class="label">Mittagessen</span></button>
@@ -144,11 +134,10 @@
       </div>
       <div class="card">
         <div class="input-group"><label>Mahlzeit</label><input type="text" id="meal-name" placeholder="z.B. Rührei mit Spinat"></div>
-        <div style="display:flex;align-items:center;gap:8px;margin:16px 0"><div style="flex:1;height:1px;background:rgba(139,115,85,0.1)"></div><span style="font-size:12px;color:var(--earth)">Nährwerte</span><div style="flex:1;height:1px;background:rgba(139,115,85,0.1)"></div></div>
         <div class="nutrients-grid">
-          <div class="input-group"><label>Kalorien (kcal)</label><input type="number" id="meal-cal" placeholder="350"></div>
+          <div class="input-group"><label>Kalorien</label><input type="number" id="meal-cal" placeholder="350"></div>
           <div class="input-group"><label>Protein (g)</label><input type="number" id="meal-prot" placeholder="18"></div>
-          <div class="input-group"><label>Kohlenhydrate (g)</label><input type="number" id="meal-carb" placeholder="45"></div>
+          <div class="input-group"><label>Kohlenhydr. (g)</label><input type="number" id="meal-carb" placeholder="45"></div>
           <div class="input-group"><label>Fett (g)</label><input type="number" id="meal-fat" placeholder="20"></div>
         </div>
         <button class="ai-btn" id="ai-btn" onclick="callAI()"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2z"/></svg>KI schätzt Nährwerte</button>
@@ -157,12 +146,11 @@
     </div>
     <div id="chat" class="view chat-view">
       <div class="chat-header card"><div class="chat-avatar"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2z"/></svg></div><div><h3 style="font-size:18px">NutriAI Coach</h3><p style="font-size:13px;color:var(--earth)">Immer online • Powered by KI</p></div></div>
-      <div class="chat-messages" id="chat-messages"><div class="message assistant">Hey! 👋 Ich bin dein Ernährungs-Assistent. Wie kann ich dir heute helfen?</div></div>
-      <div class="suggestions" id="suggestions">
+      <div class="chat-messages" id="chat-messages"><div class="message assistant">Hey! 👋 Ich bin dein Ernährungs-Assistent. Wie kann ich dir helfen?</div></div>
+      <div class="suggestions">
         <button class="suggestion" onclick="sendMessage('Was kann ich heute gesund kochen?')">💡 Kochen</button>
         <button class="suggestion" onclick="sendMessage('Gibt es ein gesundes Frühstück?')">☕ Frühstück</button>
         <button class="suggestion" onclick="sendMessage('Wie viel Protein brauche ich?')">💪 Protein</button>
-        <button class="suggestion" onclick="sendMessage('Tipps für mehr Energie')">⚡ Energie</button>
       </div>
       <div class="chat-input"><input type="text" id="chat-input" placeholder="Frag mich was..." onkeypress="if(event.key==='Enter')sendChat()"><button class="chat-send" onclick="sendChat()"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg></button></div>
     </div>
@@ -173,94 +161,38 @@
     <button class="nav-btn" onclick="showView('chat')" id="nav-chat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg><span>KI Chat</span></button>
   </nav>
   <script>
-    // Local development
-const API = 'http://localhost:3001/api';
-    let goals = { calories: 2000, protein: 120, carbs: 250, fat: 65 };
+    const SUPABASE_URL = 'https://mzrakzvwviuywqflriwz.supabase.co';
+    const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im16cmFrenZ3dml1eXdxZmxyaXd6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI3MTI4MTksImV4cCI6MjA4ODI4ODgxOX0.fq_cs6p0oB9_88hp06o4TTrKufq92uKKismowhEVRL4';
+    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+    const DEFAULT_USER = 'demo-user';
+    let goals = { goals_calories: 2000, goals_protein: 120, goals_carbs: 250, goals_fat: 65 };
     let meals = [];
     let selectedType = null;
     const mealTypeIcons = { breakfast: '🌅', lunch: '☀️', dinner: '🌙', snack: '🍎' };
     const mealTypeLabels = { breakfast: 'Frühstück', lunch: 'Mittagessen', dinner: 'Abendessen', snack: 'Snack' };
-
     async function init() { await loadGoals(); await loadMeals(); }
-    async function loadGoals() { try { const res = await fetch(API + '/user/goals'); goals = await res.json(); } catch (e) { console.error('Load goals error:', e); } }
-    async function loadMeals() { try { const res = await fetch(API + '/meals'); meals = await res.json(); renderMeals(); } catch (e) { console.error('Load meals error:', e); document.getElementById('meal-list').innerHTML = '<div class="card" style="color:#ef4444;text-align:center">Backend nicht erreichbar. Starte backend/server.js</div>'; } }
-    async function deleteMeal(id) { try { await fetch(API + '/meals/' + id, { method: 'DELETE' }); meals = meals.filter(m => m.id !== id); renderMeals(); } catch (e) { console.error('Delete error:', e); } }
-
-    async function callAI() {
-      const name = document.getElementById('meal-name').value;
-      if (!name) { alert('Bitte gib erst einen Mahlzeit-Namen ein!'); return; }
-      const btn = document.getElementById('ai-btn');
-      btn.innerHTML = '⏳ KI analysiert...'; btn.disabled = true;
-      try {
-        const url = API + '/ai/analyze';
-        console.log('Calling:', url);
-        const res = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ mealName: name }) });
-        if (!res.ok) throw new Error('API Error: ' + res.status);
-        const data = await res.json();
-        console.log('AI Result:', data);
-        document.getElementById('meal-cal').value = data.calories;
-        document.getElementById('meal-prot').value = Math.round(data.protein);
-        document.getElementById('meal-carb').value = Math.round(data.carbs);
-        document.getElementById('meal-fat').value = Math.round(data.fat);
-        btn.innerHTML = '✨ ' + data.calories + ' kcal geschätzt';
-      } catch (e) { 
-        btn.innerHTML = '❌ Fehler: ' + e.message; 
-        console.error('AI error:', e);
-        alert('Verbindung fehlgeschlagen. Ist das Backend auf Port 3001 gestartet?'); 
-      }
-      setTimeout(() => { btn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2z"/></svg>KI schätzt Nährwerte'; btn.disabled = false; }, 3000);
-    }
-
-    async function saveMeal() {
-      const name = document.getElementById('meal-name').value;
-      if (!name) { alert('Bitte gib einen Namen ein!'); return; }
-      const btn = document.getElementById('save-btn');
-      btn.disabled = true; btn.textContent = 'Speichere...';
-      try {
-        await fetch(API + '/meals', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ name, type: selectedType || 'snack', calories: parseInt(document.getElementById('meal-cal').value) || 0, protein: parseInt(document.getElementById('meal-prot').value) || 0, carbs: parseInt(document.getElementById('meal-carb').value) || 0, fat: parseInt(document.getElementById('meal-fat').value) || 0, time: new Date().toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' }) }) });
-        document.getElementById('meal-name').value = ''; document.getElementById('meal-cal').value = ''; document.getElementById('meal-prot').value = ''; document.getElementById('meal-carb').value = ''; document.getElementById('meal-fat').value = ''; selectedType = null; document.querySelectorAll('.meal-type-btn').forEach(b => b.classList.remove('selected'));
-        await loadMeals(); showView('dashboard');
-      } catch (e) { console.error('Save error:', e); alert('Fehler beim Speichern!'); }
-      btn.disabled = false; btn.textContent = 'Mahlzeit speichern';
-    }
-
-    function showView(viewId) { document.querySelectorAll('.view').forEach(v => v.classList.remove('active')); document.getElementById(viewId).classList.add('active'); document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active')); document.getElementById('nav-' + viewId).classList.add('active'); }
-
-    function renderMeals() {
-      const list = document.getElementById('meal-list');
-      if (meals.length === 0) { list.innerHTML = '<div class="card" style="text-align:center;color:var(--earth)">Noch keine Mahlzeiten geloggt</div>'; updateProgress(0,0,0,0); return; }
-      list.innerHTML = meals.map(meal => '<div class="meal-item"><div class="meal-icon">' + (mealTypeIcons[meal.type] || '🍽️') + '</div><div class="meal-info"><div class="meal-name">' + meal.name + '</div><div class="meal-meta">' + (mealTypeLabels[meal.type] || 'Mahlzeit') + ' • ' + meal.time + '</div></div><div class="meal-cal"><div class="val">' + meal.calories + '</div><div class="unit">kcal</div></div><div class="meal-delete" onclick="deleteMeal(\'' + meal.id + '\')">✕</div></div>').join('');
-      const totals = meals.reduce((acc, m) => ({ calories: acc.calories + (m.calories || 0), protein: acc.protein + (m.protein || 0), carbs: acc.carbs + (m.carbs || 0), fat: acc.fat + (m.fat || 0) }), { calories: 0, protein: 0, carbs: 0, fat: 0 });
-      updateProgress(totals.calories, totals.protein, totals.carbs, totals.fat);
-    }
-
-    function updateProgress(cal, prot, carb, fat) {
-      const setPct = (id, curr, goal) => { const p = Math.min(Math.round((curr / goal) * 100), 100); document.getElementById(id + '-percent').textContent = p + '%'; document.getElementById(id + '-fill').style.width = p + '%'; document.getElementById(id + '-current').textContent = curr; };
-      setPct('cal', cal, goals.goals_calories || goals.calories); setPct('prot', prot, goals.goals_protein || goals.protein); setPct('carb', carb, goals.goals_carbs || goals.carbs); setPct('fat', fat, goals.goals_fat || goals.fat);
-      document.getElementById('progress-percent').textContent = Math.min(Math.round((cal / (goals.goals_calories || 2000)) * 100), 100);
-      document.querySelector('.progress-value:last-child .goal').textContent = '/ ' + (goals.goals_calories || 2000) + ' kcal';
-    }
-
-    function selectMealType(type) { selectedType = type; document.querySelectorAll('.meal-type-btn').forEach(b => b.classList.remove('selected')); event.target.closest('.meal-type-btn').classList.add('selected'); }
-
-    function sendMessage(text) { document.getElementById('chat-input').value = text; sendChat(); }
-
-    async function sendChat() {
-      const input = document.getElementById('chat-input'); const text = input.value.trim();
-      if (!text) return;
-      const messages = document.getElementById('chat-messages');
-      messages.innerHTML += '<div class="message user">' + text + '</div>';
-      messages.innerHTML += '<div class="typing" id="typing"><span></span><span></span><span></span></div>';
-      messages.scrollTop = messages.scrollHeight; input.value = '';
-      try {
-        const res = await fetch(API + '/ai/chat', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ message: text }) });
-        const data = await res.json();
-        document.getElementById('typing').remove();
-        messages.innerHTML += '<div class="message assistant">' + data.response + '</div>';
-        messages.scrollTop = messages.scrollHeight;
-      } catch (e) { document.getElementById('typing').remove(); messages.innerHTML += '<div class="message assistant">Entschuldigung, es gab einen Fehler. Ist das Backend gestartet?</div>'; }
-    }
-
+    async function loadGoals() { try { const { data } = await supabase.from('users').select('*').eq('id', DEFAULT_USER).single(); if (data) goals = data; } catch (e) { console.error(e); } }
+    async function loadMeals() { try { const today = new Date().toISOString().split('T')[0]; const { data } = await supabase.from('meals').select('*').eq('user_id', DEFAULT_USER).eq('date', today).order('time', { ascending: false }); meals = data || []; renderMeals(); } catch (e) { document.getElementById('meal-list').innerHTML = '<div class="card" style="color:#ef4444">Fehler</div>'; } }
+    async function deleteMeal(id) { await supabase.from('meals').delete().eq('id', id); meals = meals.filter(m => m.id !== id); renderMeals(); }
+    function estimateNutrition(name) { name = (name||'').toLowerCase(); let cal=300, pro=15, carb=30, fat=12; if(name.includes('hähnchen')||name.includes('chicken')){pro=40;cal=450;fat=15}else if(name.includes('rind')){pro=45;cal=550;fat=30}else if(name.includes('fisch')){pro=35;cal=400;fat=18}else if(name.includes('ei')){pro=25;cal=300;fat=20}else if(name.includes('brot')){carb=40;cal=300}else if(name.includes('avocado')){fat=25;cal=350}else if(name.includes('salat')){cal=150}else if(name.includes('reis')){carb=50;cal=350}else if(name.includes('nudel')){carb=60;cal=400} const v=()=>Math.floor(Math.random()*20)-10; return{calories:Math.max(50,cal+v()),protein:Math.max(0,pro+v()),carbs:Math.max(0,carb+v()),fat:Math.max(0,fat+v())}; }
+    async function callAI(){const name=document.getElementById('meal-name').value;if(!name){alert('Name eingeben');return}const btn=document.getElementById('ai-btn');btn.innerHTML='⏳...';btn.disabled=true;const d=estimateNutrition(name);document.getElementById('meal-cal').value=d.calories;document.getElementById('meal-prot').value=Math.round(d.protein);document.getElementById('meal-carb').value=Math.round(d.carbs);document.getElementById('meal-fat').value=Math.round(d.fat);btn.innerHTML='✨ '+d.calories+' kcal';setTimeout(()=>{btn.innerHTML='<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2z"/></svg>KI schätzt';btn.disabled=false},2000)}
+    async function saveMeal(){const name=document.getElementById('meal-name').value;if(!name){alert('Name eingeben');return}const btn=document.getElementById('save-btn');btn.disabled=true;btn.textContent='Speichere...';try{const today=new Date().toISOString().split('T')[0];const time=new Date().toLocaleTimeString('de-DE',{hour:'2-digit',minute:'2-digit'});await supabase.from('meals').insert([{user_id:DEFAULT_USER,name,type:selectedType||'snack',calories:parseInt(document.getElementById('meal-cal').value)||0,protein:parseInt(document.getElementById('meal-prot').value)||0,carbs:parseInt(document.getElementById('meal-carb').value)||0,fat:parseInt(document.getElementById('meal-fat').value)||0,time,date:today}]);document.getElementById('meal-name').value='';document.getElementById('meal-cal').value='';document.getElementById('meal-prot').value='';document.getElementById('meal-carb').value='';document.getElementById('meal-fat').value='';selectedType=null;document.querySelectorAll('.meal-type-btn').forEach(b=>b.classList.remove('selected'));await loadMeals();showView('dashboard');}catch(e){alert('Fehler!');console.error(e)}btn.disabled=false;btn.textContent='Speichern'}
+    function showView(id){document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));document.getElementById(id).classList.add('active');document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));document.getElementById('nav-'+id).classList.add('active');}
+    function renderMeals(){const list=document.getElementById('meal-list');if(meals.length===0){list.innerHTML='<div class="card" style="text-align:center;color:var(--earth)">Noch keine Mahlzeiten</div>';updateProgress(0,0,0,0);return}list.innerHTML=meals.map(m=>'<div class="meal-item"><div class="meal-icon">'+(mealTypeIcons[m.type]||'🍎')+'</div><div class="meal-info"><div class="meal-name">'+m.name+'</div><div class="meal-meta">'+mealTypeLabels[m.type]+' • '+m.time+'</div></div><div class="meal-cal"><div class="val">'+m.calories+'</div><div class="unit">kcal</div></div><div class="meal-delete" onclick="deleteMeal(\''+m.id+'\')">🗑</div></div>').join('');const tc=meals.reduce((a,m)=>a+m.calories,0),tp=meals.reduce((a,m)=>a+m.protein,0),tca=meals.reduce((a,m)=>a+m.carbs,0),tf=meals.reduce((a,m)=>a+m.fat,0);updateProgress(tc,tp,tca,tf)}
+    function updateProgress(tc,tp,tca,tf){const p=Math.min(100,Math.round(tc/goals.goals_calories*100));document.getElementById('progress-percent').textContent=p;document.getElementById('cal-percent').textContent=p+'%';document.getElementById('cal-fill').style.width=p+'%';document.getElementById('cal-current').textContent=tc;const pp=Math.min(100,Math.round(tp/goals.goals_protein*100));document.getElementById('prot-percent').textContent=pp+'%';document.getElementById('prot-fill').style.width=pp+'%';document.getElementById('prot-current').textContent=tp;const pca=Math.min(100,Math.round(tca/goals.goals_carbs*100));document.getElementById('carb-percent').textContent=pca+'%';document.getElementById('carb-fill').style.width=pca+'%';document.getElementById('carb-current').textContent=tca;const pf=Math.min(100,Math.round(tf/goals.goals_fat*100));document.getElementById('fat-percent').textContent=pf+'%';document.getElementById('fat-fill').style.width=pf+'%';document.getElementById('fat-current').textContent=tf}
+    function selectMealType(t){selectedType=t;document.querySelectorAll('.meal-type-btn').forEach(b=>b.classList.remove('selected'));event.target.closest('.meal-type-btn').classList.add('selected')}
+    function sendMessage(msg){document.getElementById('chat-input').value=msg;sendChat()}
+    function sendChat(){const input=document.getElementById('chat-input');const msg=input.value.trim();if(!msg)return;const msgs=document.getElementById('chat-messages');msgs.innerHTML+='<div class="message user">'+msg+'</div>';msgs.innerHTML+='<div class="typing"><span></span><span></span><span></span></div>';msgs.scrollTop=msgs.scrollHeight;input.value='';setTimeout(()=>{const resp=generateResponse(msg);msgs.innerHTML=msgs.innerHTML.replace('<div class="typing"><span></span><span></span><span
+function generateResponse(msg) {
+  msg = msg.toLowerCase();
+  if(msg.includes("kochen") || msg.includes("rezept")) return "Wie wäre es mit gegrilltem Hähnchen mit Gemüse? 🥗 Oder ein leichter Quinoa-Salat?";
+  if(msg.includes("frühstück") || msg.includes("breakfast")) return "Haferflocken mit Beeren und Nüssen sind perfekt! 🥣 Oder Rührei mit Vollkornbrot.";
+  if(msg.includes("protein")) return "Als Erwachsener brauchst du ca. 0,8g Protein pro kg Körpergewicht. Bei 70kg wären das ca. 56g täglich.";
+  if(msg.includes("energie") || msg.includes("müde")) return "Versuche mehr Vollkornprodukte, gesunde Fette und trink genug Wasser! 💧 Bananen geben schnelle Energie.";
+  if(msg.includes("salat")) return "Ein guter Salat braucht Blattgemüse + Protein (Huhn/Fisch/Tofu) + gesundes Fett (Avocado/Nüsse) + komplexe Kohlenhydrate.";
+  if(msg.includes("abnehmen") || msg.includes("diät")) return "Kaloriendefizit ist der Schlüssel. Iss proteinreich, vermeide Zucker und trinke vor jeder Mahlzeit ein Glas Wasser!";
+  return "Das ist eine interessante Frage! 😊 Ich helfe dir gerne bei deiner Ernährung. Frag mich nach Rezepten, Nährwerten oder Tipps!";
+}
     init();
   </script>
 </body>
