@@ -1,9 +1,16 @@
 {
+  "buildCommand": "echo 'Static build - no compilation needed'",
+  "outputDirectory": ".",
+  "framework": null,
   "rewrites": [
     { "source": "/(.*)", "destination": "/index.html" }
   ],
-  "env": {
-    "VITE_API_URL": "https://your-supabase-url.supabase.co",
-    "VITE_SUPABASE_ANON_KEY": "your-anon-key"
-  }
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        { "key": "Content-Type", "value": "text/html; charset=utf-8" }
+      ]
+    }
+  ]
 }
