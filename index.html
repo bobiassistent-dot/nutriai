@@ -170,9 +170,50 @@
     let selectedType = null;
     const mealTypeIcons = { breakfast: '🌅', lunch: '☀️', dinner: '🌙', snack: '🍎' };
     const mealTypeLabels = { breakfast: 'Frühstück', lunch: 'Mittagessen', dinner: 'Abendessen', snack: 'Snack' };
-    async function init() { await loadGoals(); await loadMeals(); }
-    async function loadGoals() { try { const { data } = await supabase.from('users').select('*').eq('id', DEFAULT_USER).single(); if (data) goals = data; } catch (e) { console.error(e); } }
-    async function loadMeals() { try { const today = new Date().toISOString().split('T')[0]; const { data } = await supabase.from('meals').select('*').eq('user_id', DEFAULT_USER).eq('date', today).order('time', { ascending: false }); meals = data || []; renderMeals(); } catch (e) { document.getElementById('meal-list').innerHTML = '<div class="card" style="color:#ef4444">Fehler</div>'; } }
+    async function init() { 
+      console.log('🚀 Init start...');
+      console.log('Supabase URL:', SUPABASE_URL);
+      try {
+        await loadGoals(); 
+        console.log('✅ Goals geladen');
+        await loadMeals(); 
+        console.log('✅ Meals geladen');
+      } catch(e) {
+        console.error('❌ Init Error:', e);
+        document.getElementById('meal-list').innerHTML = '<div class="card" style="color:#ef4444">Fehler: '+e.message+'</div>';
+      }
+    }
+    async function loadGoals() { 
+      try { 
+        console.log('📥 Lade Goals...');
+        const { data, error } = await supabase.from('users').select('*').eq('id', DEFAULT_USER).single(); 
+        if (error) {
+          console.warn('⚠️ Keine Goals gefunden, nutze Standard');
+          goals = { goals_calories: 2000, goals_protein: 120, goals_carbs: 250, goals_fat: 65 };
+        } else if (data) {
+          goals = data; 
+          console.log('✅ Goals:', goals);
+        }
+      } catch (e) { console.error('❌ loadGoals Error:', e); }
+    }
+    async function loadMeals() { 
+      try { 
+        console.log('📥 Lade Meals...');
+        const today = new Date().toISOString().split('T')[0]; 
+        const { data, error } = await supabase.from('meals').select('*').eq('user_id', DEFAULT_USER).eq('date', today).order('time', { ascending: false }); 
+        if (error) {
+          console.error('❌ loadMeals Error:', error);
+          document.getElementById('meal-list').innerHTML = '<div class="card" style="color:#ef4444">DB Fehler: '+error.message+'</div>';
+        } else {
+          meals = data || []; 
+          console.log('✅ Meals geladen:', meals.length);
+          renderMeals(); 
+        }
+      } catch (e) { 
+        console.error('❌ loadMeals Exception:', e); 
+        document.getElementById('meal-list').innerHTML = '<div class="card" style="color:#ef4444">Fehler: '+e.message+'</div>'; 
+      } 
+    }
     async function deleteMeal(id) { await supabase.from('meals').delete().eq('id', id); meals = meals.filter(m => m.id !== id); renderMeals(); }
     function estimateNutrition(name) { name = (name||'').toLowerCase(); let cal=300, pro=15, carb=30, fat=12; if(name.includes('hähnchen')||name.includes('chicken')){pro=40;cal=450;fat=15}else if(name.includes('rind')){pro=45;cal=550;fat=30}else if(name.includes('fisch')){pro=35;cal=400;fat=18}else if(name.includes('ei')){pro=25;cal=300;fat=20}else if(name.includes('brot')){carb=40;cal=300}else if(name.includes('avocado')){fat=25;cal=350}else if(name.includes('salat')){cal=150}else if(name.includes('reis')){carb=50;cal=350}else if(name.includes('nudel')){carb=60;cal=400} const v=()=>Math.floor(Math.random()*20)-10; return{calories:Math.max(50,cal+v()),protein:Math.max(0,pro+v()),carbs:Math.max(0,carb+v()),fat:Math.max(0,fat+v())}; }
     async function callAI(){const name=document.getElementById('meal-name').value;if(!name){alert('Name eingeben');return}const btn=document.getElementById('ai-btn');btn.innerHTML='⏳...';btn.disabled=true;const d=estimateNutrition(name);document.getElementById('meal-cal').value=d.calories;document.getElementById('meal-prot').value=Math.round(d.protein);document.getElementById('meal-carb').value=Math.round(d.carbs);document.getElementById('meal-fat').value=Math.round(d.fat);btn.innerHTML='✨ '+d.calories+' kcal';setTimeout(()=>{btn.innerHTML='<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2z"/></svg>KI schätzt';btn.disabled=false},2000)}
